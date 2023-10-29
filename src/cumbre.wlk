@@ -16,7 +16,8 @@ object cumbre {
 	method actividades() = actividades
 	
 	method agregarAuspiciante(unAuspiciante) {auspiciantes.add(unAuspiciante)}
-	method agregarParticipante(unParticipante) {
+	method agregarParticipante(unParticipante) {participantes.add(unParticipante)}
+	method agregarParticipanteSiPuede(unParticipante) {
 		if (!self.puedeEntrar(unParticipante)){
 			self.error("No puede entrar")
 			esSegura = false
@@ -26,7 +27,7 @@ object cumbre {
 	method cambiarMinimoDeCommits(unaCantidad) {minimoDeCommits = unaCantidad}
 	
 	method esConflictivo(unPais) = !unPais.conflictoCon().intersection(auspiciantes).isEmpty()
-	method paisesDeLosParticipantes() = participantes.map({participante => participante.pais()}.asSet())
+	method paisesDeLosParticipantes() = participantes.map({participante => participante.pais()}).asSet()
 	method cantidadDeParticipantesDe(unPais) = participantes.count({participante => participante.pais() == unPais})
 	method paisConMasParticipantes() = self.paisesDeLosParticipantes().max({pais => self.cantidadDeParticipantesDe(pais)})
 	method participantesExtranjeros() = participantes.filter({participante => !auspiciantes.contains(participante.pais())})

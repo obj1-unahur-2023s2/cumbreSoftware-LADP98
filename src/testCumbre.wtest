@@ -1,0 +1,68 @@
+import conocimientos.*
+import participantes.*
+import paises.*
+import cumbre.*
+
+describe "Cumbre normal" {
+	const argentina = new Pais()
+	const brasil = new Pais()
+	const juana = new Programador(pais= argentina, cantidadDeCommits=600, conocimientos = [css, html])
+	const lucia = new Programador(pais= brasil, cantidadDeCommits=800, conocimientos=[programacionBasica, basesDeDatos])
+	const mariana = new Especialista(pais=argentina, cantidadDeCommits=200, conocimientos=[programacionBasica, instalacionLinux, objetos, disenioConObjetos])
+	
+	method initialize(){
+		cumbre.agregarParticipante(juana)
+		cumbre.agregarParticipante(lucia)
+		cumbre.agregarParticipante(mariana)
+	}
+	
+	test "La cumbre es relevante" {
+		assert.that(cumbre.esRelevante())
+	}
+	test "La cumbre no es relevante con Susana" {
+		const colombia = new Pais()
+		const susana = new Especialista(pais= colombia, cantidadDeCommits=1500, conocimientos=[programacionBasica,objetos])
+		cumbre.agregarParticipante(susana)
+		assert.notThat(cumbre.esRelevante())
+	}
+	test "Argentina tiene 2 participantes"{
+		assert.equals(2, cumbre.cantidadDeParticipantesDe(argentina))
+	}
+	test "Paises participantes"{
+		assert.equals(#{argentina, brasil},cumbre.paisesDeLosParticipantes())
+	}
+	test "Argentina es el pais con mas participantes"{
+		assert.equals(argentina, cumbre.paisConMasParticipantes())
+	}
+}
+
+describe "Cumbre con conflicto" {
+	const argentina = new Pais()
+	const brasil = new Pais()
+	const colombia = new Pais()
+	const coreaDelSur = new Pais()
+	const coreaDelNorte = new Pais()
+	const juana = new Programador(pais= argentina, cantidadDeCommits=600, conocimientos = [css, html])
+	const lucia = new Programador(pais= brasil, cantidadDeCommits=800, conocimientos=[programacionBasica, basesDeDatos])
+	const mariana = new Especialista(pais=argentina, cantidadDeCommits=200, conocimientos=[programacionBasica, instalacionLinux, objetos, disenioConObjetos])
+	const susana = new Especialista(pais= colombia, cantidadDeCommits=1500, conocimientos=[programacionBasica,objetos ])
+	
+	
+	method initialize(){
+		coreaDelSur.registrarConflictoCon(coreaDelNorte)
+		cumbre.agregarParticipante(lucia)
+		cumbre.agregarParticipante(susana)
+		cumbre.agregarParticipante(mariana)
+		cumbre.agregarParticipante(juana)
+		cumbre.agregarAuspiciante(argentina)
+		cumbre.agregarAuspiciante(colombia)
+		cumbre.agregarAuspiciante(coreaDelNorte)
+	}
+	test "Lucia es la unica participante extranjera"{
+		assert.equals(#{lucia}, cumbre.participantesExtranjeros())
+	}
+	test "Corea del sur es conflictivo para la cumbre"{
+		assert.that(cumbre.esConflictivo(coreaDelSur))
+	}
+}
+
